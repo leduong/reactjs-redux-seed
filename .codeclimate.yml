@@ -1,0 +1,8 @@
+exclude_paths:
+- "tests/"
+- "spec/"
+- "systemjs.*.js"
+- "gulpfile.js"
+engines:
+  tslint:
+    enabled: true

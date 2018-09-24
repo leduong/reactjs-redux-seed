@@ -1,0 +1,65 @@
+version: '1.0.{build}'
+image: Visual Studio 2017
+clone_folder: c:\projects\reactdds
+init:
+  - git config --global core.autocrlf input
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+# Do not build on gh tags
+skip_tags: true
+
+# Test against these versions of Node.js
+environment:
+
+  matrix:
+    # Node versions to run
+    - nodejs_version: 10
+    - nodejs_version: 9
+    - nodejs_version: 8
+
+# Finish on first failed build
+matrix:
+  fast_finish: true
+
+platform:
+  - x64
+
+branches:
+  only:
+    - master
+
+# Disable Visual Studio build and deploy
+build: off
+deploy: off
+
+# Install scripts--runs after repo cloning
+install:
+  - ps: Install-Product node $env:nodejs_version $env:platform
+  - yarn install --frozen-lockfile
+  - set PATH=%APPDATA%\yarn;%PATH%
+  - yarn
+
+# Post-install test scripts
+test_script:
+  # Output debugging info
+  - node --version
+  # run tests and run build
+  - yarn run test
+  - yarn run build
+
+# Cache node_modules for faster builds
+cache:
+ - node_modules
+ - "%LOCALAPPDATA%/Yarn"
+
+# remove, as appveyor doesn't support secure variables on pr builds
+# so `COVERALLS_REPO_TOKEN` cannot be set, without hard-coding in this file
+#on_success:
+#- yarn run coveralls
+
+
+ # - ps: docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
+ # - ps: docker push "leduong/ReactDDS:nanoserver-$env:APPVEYOR_BUILD_NUMBER"
+
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
