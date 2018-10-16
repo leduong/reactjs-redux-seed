@@ -13,7 +13,7 @@ cache:
 before_install: if [[ `npm -v` != 6* ]]; then npm i -g npm@6; fi
 
 script:
-  - npm test -- --coverage
+  - npm test
   - npm run build
 
 after_script:

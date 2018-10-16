@@ -37,17 +37,40 @@
     "styled-components": "^3.4.9",
     "styled-theme": "^0.3.3"
   },
+  "devDependencies": {
+    "coveralls": "^3.0.0",
+    "eslint": "^5.4.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-config-xo": "^0.24.2",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.11.1",
+    "gh-pages": "^2.0.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.11.1"
+  },
   "scripts": {
     "start": "./node_modules/.bin/react-app-rewired start",
     "build": "./node_modules/.bin/react-app-rewired build",
-    "test": "./node_modules/.bin/react-app-rewired test --env=jsdom",
-    "coverage": "./node_modules/.bin/react-scripts test --env=jsdom --coverage",
+    "pretest": "./node_modules/.bin/eslint .",
+    "test": "./node_modules/.bin/react-scripts test --env=jsdom --coverage",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "eject": "./node_modules/.bin/react-scripts eject",
     "predeploy": "./node_modules/.bin/react-app-rewired build",
     "deploy": "./node_modules/.bin/gh-pages -d build"
   },
-  "devDependencies": {
-    "gh-pages": "^2.0.0"
+  "lint-staged": {
+    "*.js": ["eslint --fix", "git add"],
+    "*.json": ["git add", "prettier --write"]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js",
+      "!src/registerServiceWorker.js"
+    ]
+  },
+  "engines": {
+    "npm": ">= 6.0.0"
   }
 }
