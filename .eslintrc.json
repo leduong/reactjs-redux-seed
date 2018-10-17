@@ -30,6 +30,7 @@
   "globals": {
     "navigator": false,
     "window": false,
+    "fetch": false,
     "document": false
   }
 }
